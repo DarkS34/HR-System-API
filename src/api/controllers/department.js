@@ -88,11 +88,12 @@ const updateDepartment = async (req, res, next) => {
     }
 
     const newDepartment = new Department(req.body);
+
     newDepartment._id = id;
-    newDepartment.employees = [
-      ...oldDepartment.employees,
-      ...req.body.employees,
-    ];
+
+    newDepartment.employees = req.body.employees
+      ? Array.from(new Set(req.body.employees))
+      : oldDepartment.employees;
 
     const departmentUpdated = await Department.findByIdAndUpdate(
       id,
